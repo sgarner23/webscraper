@@ -50,6 +50,7 @@ async function searchCraigsList() {
   await page.$$eval("#search-results li", (cardList) => {
     const newCards = [];
 
+    //Formatting the date to compare if the date the apartment was listed is today's date
     function formatDate(date) {
       let milisec = Date.parse(date);
       let dateObject = new Date(milisec).toDateString();
@@ -57,8 +58,8 @@ async function searchCraigsList() {
       let day = dateArr[2];
       return day;
     }
-    //loop
 
+    //looping through the list of apartments and determining which ones are "new". Posted today.
     for (let i = 0; i < cardList.length; i++) {
       const newCard = {};
 
@@ -68,6 +69,7 @@ async function searchCraigsList() {
 
       todaysDate = formatDate(new Date());
 
+      //Building card object and pushing to array that will be returned to client
       if (formattedDate === todaysDate) {
         newCard.date = cardList[i].querySelector(".result-date").textContent;
         newCard.title = cardList[i].querySelector(".result-title").textContent;
