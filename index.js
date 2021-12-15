@@ -1,17 +1,17 @@
 const puppeteer = require("puppeteer");
-// const select = require("puppeteer-select");
 
-async function searchKSL() {
-  console.log("RUNNING");
-
+async function searchCraigsList() {
   const browser = await puppeteer.launch({
     headless: false,
     devtools: true,
   });
+
+  //Launching new browser with desktop view screen and navigating to CraigsList
   const page = await browser.newPage();
   await page.setViewport({ width: 1366, height: 768 });
   await page.goto("https://craigslist.com");
 
+  //Finding the house section and clicking on the apartment link
   await page.$$eval("#hhh0 li a span", (housingList) => {
     for (let i = 0; i < housingList.length; i++) {
       if (housingList[i].textContent === "apts / housing") {
@@ -20,6 +20,8 @@ async function searchKSL() {
     }
   });
 
+  //Entering search criteria for apartments in CraigsList
+  //This will eventually be filled with dynamic data from client
   await page.waitForSelector('input[name="search_distance"]');
   await page.type('input[name="search_distance"]', "25");
 
@@ -67,7 +69,6 @@ async function searchKSL() {
       todaysDate = formatDate(new Date());
 
       if (formattedDate === todaysDate) {
-        console.log(cardList[i]);
         newCard.date = cardList[i].querySelector(".result-date").textContent;
         newCard.title = cardList[i].querySelector(".result-title").textContent;
         newCard.price = cardList[i].querySelector(".result-price").textContent;
@@ -83,12 +84,6 @@ async function searchKSL() {
     console.log(newCards);
     return newCards;
   });
-
-  // await page.keyboard.type(`25`);
-
-  // await classifiedBtn[8].click();
-
-  // await browser.close();
 }
 
-searchKSL();
+searchCraigsList();
